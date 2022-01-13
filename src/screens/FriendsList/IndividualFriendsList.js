@@ -11,8 +11,7 @@ const IndividualFriendsList = props => {
   const name = props.route.params.name;
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.titleText}>IndividualFriendsList</Text>
-      <Text>{name} List</Text>
+      <Text style={styles.titleText}>{name}'s List</Text>
       <FlatList
         data={[
           {key: 'shoes', url: 'walmart.com'},
@@ -31,16 +30,19 @@ const IndividualFriendsList = props => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#373f51',
   },
   item: {
     padding: 10,
     fontSize: 18,
     height: 44,
+    color: '#d8dbe2',
   },
   titleText: {
     fontSize: 30,
     fontWeight: 'bold',
     textAlign: 'center',
+    color: '#d8dbe2',
   },
 });
 

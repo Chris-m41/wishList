@@ -44,16 +44,19 @@ const FriendsList = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#373f51',
   },
   item: {
     padding: 10,
     fontSize: 18,
     height: 44,
+    color: '#d8dbe2',
   },
   titleText: {
     fontSize: 30,
     fontWeight: 'bold',
     textAlign: 'center',
+    color: '#d8dbe2',
   },
 });
 

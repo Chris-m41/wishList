@@ -68,6 +68,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  footer: {
+    color: '#373f51',
+  },
 });
 
 export default App;
