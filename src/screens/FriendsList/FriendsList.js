@@ -31,8 +31,16 @@ const FriendsList = () => {
           {key: 'Jimmy'},
           {key: 'Julie'},
         ]}
-        renderItem={({item}) => (
-          <TouchableOpacity onPress={() => onTapName(item.key)}>
+        renderItem={({item, index}) => (
+          <TouchableOpacity
+            style={{
+              backgroundColor: index % 2 === 0 ? '#dbdbe2' : '#a9bcd0',
+              borderWidth: 1,
+              padding: 3,
+              marginRight: 15,
+              marginLeft: 15,
+            }}
+            onPress={() => onTapName(item.key)}>
             <Text style={styles.item}>{item.key}</Text>
           </TouchableOpacity>
         )}
@@ -50,7 +58,7 @@ const styles = StyleSheet.create({
     padding: 10,
     fontSize: 18,
     height: 44,
-    color: '#d8dbe2',
+    color: '#373f51',
   },
   titleText: {
     fontSize: 30,

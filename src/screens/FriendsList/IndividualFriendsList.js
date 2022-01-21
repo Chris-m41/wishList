@@ -1,28 +1,53 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {
   Text,
   FlatList,
   StyleSheet,
-  TouchableOpacity,
+  View,
   SafeAreaView,
+  Button,
+  Linking,
+  TouchableOpacity,
 } from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 
 const IndividualFriendsList = props => {
   const name = props.route.params.name;
+  const navigation = useNavigation();
+
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.titleText}>{name}'s List</Text>
       <FlatList
         data={[
-          {key: 'shoes', url: 'walmart.com'},
-          {key: 'shoes1', url: 'walmart.com1'},
-          {key: 'shoes2', url: 'walmart.com2'},
-          {key: 'shoes3', url: 'walmart.com3'},
-          {key: 'shoes4', url: 'walmart.com4'},
-          {key: 'shoes5', url: 'walmart.com5'},
+          {key: 'shoes', url: 'https://walmart.com'},
+          {key: 'shoes1', url: 'https://walmart.com'},
+          {key: 'shoes2', url: 'https://walmart.com'},
+          {key: 'shoes3', url: 'https://walmart.com'},
+          {key: 'shoes4', url: 'https://walmart.com'},
+          {
+            key: 'Peloton Treadmill',
+            url: 'https://www.onepeloton.com/shop/tread/tread-basics-package-us',
+          },
         ]}
-        renderItem={({item}) => <Text style={styles.item}>{item.key}</Text>}
+        renderItem={({item, index}) => (
+          <TouchableOpacity
+            style={{
+              backgroundColor: index % 2 === 0 ? '#dbdbe2' : '#a9bcd0',
+              borderWidth: 1,
+              padding: 3,
+              marginRight: 15,
+              marginLeft: 15,
+            }}
+            onPress={() => {
+              Linking.openURL(item.url);
+            }}>
+            {console.log('url', item.url)}
+            <Text style={styles.item}>{item.key}</Text>
+          </TouchableOpacity>
+        )}
       />
+      <Button title="Go back" onPress={() => navigation.goBack()} />
     </SafeAreaView>
   );
 };
@@ -36,7 +61,7 @@ const styles = StyleSheet.create({
     padding: 10,
     fontSize: 18,
     height: 44,
-    color: '#d8dbe2',
+    color: '#373f51',
   },
   titleText: {
     fontSize: 30,
