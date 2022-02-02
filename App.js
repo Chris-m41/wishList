@@ -11,22 +11,21 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
-
-const Tab = createBottomTabNavigator();
-const Stack = createStackNavigator();
+import {StyleSheet} from 'react-native';
+import auth from '@react-native-firebase/auth';
+import database from '@react-native-firebase/database';
 
 import MyList from './src/screens/MyList/MyList';
 import FriendsList from './src/screens/FriendsList/FriendsList';
 import IndividualFriendsList from './src/screens/FriendsList/IndividualFriendsList';
+import AuthStack from './src/screens/Auth/AuthStack';
+import CreateAccount, {isLoggedIn} from './src/screens/Auth/CreateAccount';
+
+export const Database = database();
+// export const userId = auth().currentUser.uid;
+export const userId = '12345567';
+const Tab = createBottomTabNavigator();
+const Stack = createStackNavigator();
 
 const ListStack = () => {
   return (
@@ -45,8 +44,30 @@ const ListStack = () => {
   );
 };
 
-const App = () => {
+const AuthStack1 = () => {
   return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="Login"
+        component={AuthStack}
+        options={{headerTitle: 'Login', headerShown: false}}
+      />
+      <Stack.Screen
+        name="CreateAccount"
+        component={CreateAccount}
+        options={{headerTitle: 'IndividualFriendsList', headerShown: false}}
+      />
+    </Stack.Navigator>
+  );
+};
+
+const App = () => {
+  console.log('isLoggedIn', isLoggedIn());
+  return isLoggedIn() ? (
+    <NavigationContainer>
+      <AuthStack1 />
+    </NavigationContainer>
+  ) : (
     <NavigationContainer>
       <Tab.Navigator>
         <Tab.Screen
