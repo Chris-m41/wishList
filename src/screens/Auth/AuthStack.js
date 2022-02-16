@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   Text,
   FlatList,
@@ -10,23 +10,33 @@ import {
   TextInput,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
+import {Auth} from '../../../App';
 
 const AuthStack = () => {
   const navigation = useNavigation();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const onLogin = () => {
+    Auth.signInWithEmailAndPassword(email, password).then(() => {
+      console.log('signed in!');
+    });
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.titleText}>Login Screen</Text>
       <TextInput
         placeholder="Email"
         style={styles.textInputStyles}
-        // onChangeText={text => setItem(text)}
+        onChangeText={text => setEmail(text)}
       />
       <TextInput
         placeholder="Password"
         style={styles.textInputStyles}
-        // onChangeText={text => setUrl(text)}
+        onChangeText={text => setPassword(text)}
       />
-      <Button title="Login" />
+      <Button title="Login" onPress={onLogin} />
       <Button
         title="Create Account"
         onPress={() => navigation.navigate('CreateAccount')}

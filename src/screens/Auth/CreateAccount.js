@@ -11,16 +11,11 @@ import {
 import auth from '@react-native-firebase/auth';
 import {useNavigation} from '@react-navigation/native';
 
-export const isLoggedIn = (loggedIn = false) => {
-  return loggedIn;
-};
-
 export const onSubmit = (email, password) => {
   auth()
     .createUserWithEmailAndPassword(email, password)
     .then(() => {
       console.log('User account created & signed in!');
-      isLoggedIn(true);
     })
     .catch(error => {
       if (error.code === 'auth/email-already-in-use') {
