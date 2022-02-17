@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   Text,
   StyleSheet,
@@ -10,13 +10,24 @@ import {
   KeyboardAvoidingView,
   Alert,
 } from 'react-native';
-import {userId, Database} from '../../../App';
+import {Auth, Database} from '../../../App';
 
 const MyList = () => {
+  // useEffect(() => {
+  //   Database.ref('/' + userId + '/myInfo')
+  //     .once('value')
+  //     .then(snapshot => {
+  //       console.log('User data: ', snapshot.val());
+  //       const data = snapshot.val();
+  //       setFirstName(data.firstName);
+  //       setLastName(data.lastName);
+  //     });
+  // });
+
   const [item, setItem] = useState('');
   const [url, setUrl] = useState('');
-  // const userId = Auth.currentUser.uid;
-  console.log('userId', userId);
+  const userId = Auth.currentUser.uid;
+
   const onSubmit = () => {
     if (!item && !url) {
       Alert.alert('No data present');
@@ -25,12 +36,10 @@ const MyList = () => {
     } else if (item && !url) {
       Alert.alert('URL is missing');
     } else {
-      Database.ref('/' + userId + '/myList')
-        .set({
-          item: item,
-          url: url,
-        })
-        .then(() => console.log('Data set.'));
+      Database.ref('/' + userId + '/myList').set({
+        item: item,
+        url: url,
+      });
       setItem('');
       setUrl('');
       Alert.alert('Data is Set');

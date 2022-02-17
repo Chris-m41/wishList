@@ -8,14 +8,18 @@ import {
   Button,
   Alert,
 } from 'react-native';
-import auth from '@react-native-firebase/auth';
 import {useNavigation} from '@react-navigation/native';
+import {Auth, Database} from '../../../App';
 
-export const onSubmit = (email, password) => {
-  auth()
-    .createUserWithEmailAndPassword(email, password)
+export const onSubmit = (email, password, firstName, lastName) => {
+  Auth.createUserWithEmailAndPassword(email, password)
     .then(() => {
       console.log('User account created & signed in!');
+      const userId = Auth.currentUser.uid;
+      Database.ref('/' + userId + '/myInfo').set({
+        firstName: firstName,
+        lastName: lastName,
+      });
     })
     .catch(error => {
       if (error.code === 'auth/email-already-in-use') {
@@ -33,6 +37,8 @@ export const onSubmit = (email, password) => {
 const CreateAccount = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const navigation = useNavigation();
 
   return (
@@ -41,12 +47,12 @@ const CreateAccount = () => {
       <TextInput
         placeholder="First Name"
         style={styles.textInputStyles}
-        // onChangeText={text => setUrl(text)}
+        onChangeText={text => setFirstName(text)}
       />
       <TextInput
         placeholder="Last Name"
         style={styles.textInputStyles}
-        // onChangeText={text => setUrl(text)}
+        onChangeText={text => setLastName(text)}
       />
       <TextInput
         placeholder="Email"
@@ -58,7 +64,10 @@ const CreateAccount = () => {
         style={styles.textInputStyles}
         onChangeText={text => setPassword(text)}
       />
-      <Button title="Submit" onPress={() => onSubmit(email, password)} />
+      <Button
+        title="Submit"
+        onPress={() => onSubmit(email, password, firstName, lastName)}
+      />
       <Button title="Go Back" onPress={() => navigation.goBack()} />
     </SafeAreaView>
   );

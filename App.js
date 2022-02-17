@@ -24,8 +24,8 @@ import Profile from './src/screens/Profile/Profile';
 
 export const Database = database();
 export const Auth = auth();
-// export const userId = auth().currentUser.uid;
-export const userId = '12345567';
+export const userId = auth().currentUser.uid;
+// export const userId = '12345567';
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
