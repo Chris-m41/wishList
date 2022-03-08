@@ -7,6 +7,7 @@ import {
   SafeAreaView,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
+import {Auth} from '../../../App';
 
 const FriendsList = () => {
   const navigation = useNavigation();
@@ -14,7 +15,7 @@ const FriendsList = () => {
     console.log('key: ', key);
     navigation.navigate('IndividualFriendsList', {name: key});
   };
-
+  console.log('Auth', Auth);
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.titleText}>FriendsList</Text>

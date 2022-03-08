@@ -13,36 +13,54 @@ import {
 import {Auth, Database} from '../../../App';
 
 const MyList = () => {
-  // useEffect(() => {
-  //   Database.ref('/' + userId + '/myInfo')
-  //     .once('value')
-  //     .then(snapshot => {
-  //       console.log('User data: ', snapshot.val());
-  //       const data = snapshot.val();
-  //       setFirstName(data.firstName);
-  //       setLastName(data.lastName);
-  //     });
-  // });
-
-  const [item, setItem] = useState('');
+  const [name, setName] = useState('');
   const [url, setUrl] = useState('');
-  const userId = Auth.currentUser.uid;
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    const userId = Auth.currentUser.uid;
+
+    Database.ref('/' + userId + '/myList').on('value', snapshot => {
+      var li = [];
+      snapshot.forEach(child => {
+        li.push({
+          key: child.key,
+          name: child.val().name,
+          url: child.val().url,
+        });
+      });
+      setData({list: li});
+    });
+  }, []);
+
+  const isValidUrl = () => {
+    const regex = new RegExp(
+      '(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*/?',
+    );
+    return regex.test(url);
+  };
 
   const onSubmit = () => {
-    if (!item && !url) {
+    const userId = Auth.currentUser.uid;
+
+    if (!name && !url) {
       Alert.alert('No data present');
-    } else if (!item && url) {
+    } else if (!name && url) {
       Alert.alert('Item name missing');
-    } else if (item && !url) {
+    } else if (name && !url) {
       Alert.alert('URL is missing');
     } else {
-      Database.ref('/' + userId + '/myList').set({
-        item: item,
-        url: url,
-      });
-      setItem('');
-      setUrl('');
-      Alert.alert('Data is Set');
+      if (isValidUrl()) {
+        Database.ref('/' + userId + '/myList').push({
+          name: name,
+          url: url,
+        });
+        setName('');
+        setUrl('');
+        Alert.alert('Data is Set');
+      } else {
+        Alert.alert('Invalid URL');
+      }
     }
   };
 
@@ -54,49 +72,47 @@ const MyList = () => {
       <View style={styles.footer}>
         <Text style={styles.titleText}> Add Item </Text>
         <View style={styles.listView}>
-          <FlatList
-            data={[
-              {key: 'shoes', url: 'walmart.com'},
-              {key: 'shoes1', url: 'walmart.com1'},
-              {key: 'shoes2', url: 'walmart.com2'},
-              {key: 'shoes3', url: 'walmart.com3'},
-              {key: 'shoes4', url: 'walmart.com4'},
-              {key: 'shoes5', url: 'walmart.com5'},
-              {key: 'shoes11', url: 'walmart.com'},
-              {key: 'shoes12', url: 'walmart.com1'},
-              {key: 'shoes21', url: 'walmart.com2'},
-              {key: 'shoes31', url: 'walmart.com3'},
-              {key: 'shoes41', url: 'walmart.com4'},
-              {key: 'shoes51', url: 'walmart.com5'},
-              {key: 'shoes111', url: 'walmart.com'},
-              {key: 'shoes112', url: 'walmart.com1'},
-              {key: 'shoes212', url: 'walmart.com2'},
-              {key: 'shoes312', url: 'walmart.com3'},
-              {key: 'shoes412', url: 'walmart.com4'},
-              {key: 'shoes512', url: 'walmart.com5'},
-            ]}
-            renderItem={({item, index}) => (
-              <View
-                style={{
-                  backgroundColor: index % 2 === 0 ? '#dbdbe2' : '#a9bcd0',
-                  borderWidth: 1,
-                  padding: 3,
-                  marginRight: 15,
-                  marginLeft: 15,
-                }}>
-                <Text style={styles.item}>{item.key}</Text>
-              </View>
-            )}
-          />
+          {data?.list?.length > 0 ? (
+            <FlatList
+              data={data.list}
+              keyExtractor={item => item.key}
+              renderItem={({item, index}) => (
+                <View
+                  style={{
+                    backgroundColor: index % 2 === 0 ? '#dbdbe2' : '#a9bcd0',
+                    borderWidth: 1,
+                    padding: 3,
+                    marginRight: 15,
+                    marginLeft: 15,
+                  }}>
+                  <Text style={styles.item}>
+                    {item.name} {item.url}
+                  </Text>
+                </View>
+              )}
+            />
+          ) : (
+            <View>
+              <Text style={styles.titleText}>
+                {' '}
+                Looks like there aren't any items in your list.
+              </Text>
+              <Text style={styles.titleText}>
+                How about you try adding items to you list?
+              </Text>
+            </View>
+          )}
         </View>
         <TextInput
           placeholder="Item Name"
           style={styles.textInputStyles}
-          onChangeText={text => setItem(text)}
+          onChangeText={text => setName(text)}
         />
         <TextInput
           placeholder="URL"
           style={styles.textInputStyles}
+          autoCorrect={false}
+          autoCapitalize="none"
           onChangeText={text => setUrl(text)}
         />
         <Button title="Add Item" onPress={onSubmit} />

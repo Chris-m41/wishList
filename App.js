@@ -105,7 +105,7 @@ const App = () => {
         <Tab.Screen
           name="ListStack"
           component={ListStack}
-          options={{headerTitle: 'ListStack', headerShown: false}}
+          options={{headerTitle: 'ListStack', headerShown: true}}
         />
         <Tab.Screen
           name="Profile"
